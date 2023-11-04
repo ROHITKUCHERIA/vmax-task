@@ -12,32 +12,32 @@
 </head>
 <body>
     <div>
-        <h1>Registration Form</h1>
-        <form method ="POST" action="{{ route('user.register') }}" enctype="multipart/form-data">
+        <h1>Edit Registration Form</h1>
+        <form method ="POST" action="{{ route('update') }}" enctype="multipart/form-data">
             @csrf
-
             <div>
+                <input type="text" name='id' value= {{ $users['id'] }} hidden>
                 <label for="first_name">First Name </label>
-                <input type="text" name="first_name" placeholder="First Name" required>
+                <input type="text" name="first_name" placeholder="First Name" value={{$users['first_name']}} required>
             </div>
             <div>
                 <label for="last_name">Last Name </label>
-                <input type="text" name="last_name" placeholder="Last Name" required>
+                <input type="text" name="last_name" placeholder="Last Name" value={{$users['last_name']}} required>
             </div>
             <div>
                 <label for="email">Email </label>
-                <input type="text" name="email" placeholder="Email" required>
+                <input type="text" name="email" placeholder="Email"value={{$users['email']}} required>
             </div>
             <div>
                 <label for="gender_name">Gender </label>
-                <label><input type="radio" name="gender" value="male" required>Male</label>
-                <label><input type="radio" name="gender" value="female">Female</label>
+                <label><input type="radio" name="gender" value='male' {{ $users['gender'] == 'male' ? 'checked' : '' }} required>Male</label>
+                <label><input type="radio" name="gender" value="female" {{ $users['gender'] == 'female' ? 'checked' : '' }}>Female</label>
             </div>
             <div>
                 <label for="fav_color">Fav Color </label>
-                <label><input type="checkbox" name="color[]" value="Yellow" class="checkbtn">Yellow</label>
-                <label><input type="checkbox" name="color[]" value="Orange" class="checkbtn">Orange</label>
-                <label><input type="checkbox" name="color[]" value="Brown" class="checkbtn">Brown</label>
+                <label><input type="checkbox" name="color[]" value="Yellow" class="checkbtn" {{ $users['fav_color'] == 'Yellow' ? 'checked' : '' }}>Yellow</label>
+                <label><input type="checkbox" name="color[]" value="Orange" class="checkbtn" {{ $users['fav_color'] == 'Orange' ? 'checked' : '' }}>Orange</label>
+                <label><input type="checkbox" name="color[]" value="Brown" class="checkbtn"  {{ $users['fav_color'] == 'Brown' ? 'checked' : '' }}>Brown</label>
             </div>
             <div id="checkboxError" style="color: red; display: none;">Please select at least one color.</div>
             <div>
@@ -49,10 +49,21 @@
                 <input type="password" name="password_confirm" placeholder="Confirm Password" required>
             </div>
             <div>
-                <label for="confirm_password">Upload image </label>
-                <input type="file" name="images[]" multiple required>
+                @php
+                    $userImages = explode(',',$users['images']);
+                @endphp
+                <label for="userImages">Images</label>
+                <div>
+                    @foreach($userImages as $image)
+                        <img src="{{ asset($image) }}" alt="User Image" style="max-width: 200px; max-height: 200px; margin: 5px;">
+                    @endforeach
+                </div>
+                <div>
+                    <label for="confirm_password">Update image </label>
+                    <input type="file" name="images[]" multiple required>
+                </div>
             </div>
-            <button type="submit" onclick="return validateForm()">Register</button>
+            <button type="submit" onclick="return validateForm()">Update</button>
         </form>
     </div>
 
