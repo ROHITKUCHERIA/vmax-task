@@ -15,7 +15,7 @@ class UserController extends Controller
         return view('registration');
     }
     public function registerStore(Request $request){
-
+        
         $rules = [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -26,7 +26,12 @@ class UserController extends Controller
             'color' => 'required|array|min:1',
             'color.*' => 'in:Yellow,Orange,Brown',
         ];
-    
+
+        $existingUser = User::where('email', $request->email)->first();
+
+        if ($existingUser) {
+            return back()->with('fail', 'Email already exists');
+        }
         $validatedData = $request->validate($rules);
     
         $user = new User();
@@ -47,8 +52,15 @@ class UserController extends Controller
             }
             $user->images = implode(',', $image);
             $user->save();
+            if ($user->save()) {
+                return back()->with('success', 'Register successfully');
+            }else{
+                return back()->with('fail', 'Action Failed');
+            }
+        }else{
+            return back()->with('fail', 'Image Not Found');
         }
-        return redirect('/');
+        
     }
 
     public function allRecord(){
@@ -124,7 +136,11 @@ class UserController extends Controller
         }
     
         $user->save();
-        return view('welcome');
+        if ($user->save()) {
+            return back()->with('success', 'Register successfully');
+        }else{
+            return back()->with('fail', 'Action Failed');
+        }
     }
     public function delete($id = 0){
         try {
@@ -134,7 +150,7 @@ class UserController extends Controller
             if ($user) {
                 $user->delete();
             }
-            return redirect('/');
+            return back()->with('success', 'Action done successfully');
         } catch (DecryptException $e) {
             abort(401, 'Invalid or expired link');
         }
