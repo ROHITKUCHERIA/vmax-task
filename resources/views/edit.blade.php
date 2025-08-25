@@ -12,7 +12,7 @@
 </head>
 <body>
     <div>
-        <h1>Edit Registration Form</h1>
+        <h1>Edit Registration Form Rohit Kcuehriahivhsdihzvj`</h1>
         <form method ="POST" action="{{ route('update') }}" enctype="multipart/form-data">
             @csrf
             <div>
